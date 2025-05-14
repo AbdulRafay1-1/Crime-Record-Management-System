@@ -14,7 +14,7 @@ typedef struct {
   int login(); //login function new
   void addRecord();
   void deleteRecord();    //delete function
-  
+  int loadFromFile(CrimeRecord*);
   
   //login function 
   int login(){
@@ -94,5 +94,22 @@ void deleteRecord() {
 	
 }
 
+
+// Function to Load All Records From File
+int loadFromFile(CrimeRecord *records){
+	FILE *fp = fopen(FILENAME, "rb");
+	if(!fp){
+	return 0;}
+	
+	int count = 0;
+	while (fread(&records[count], sizeof(CrimeRecord), 1, fp)){
+		count++;
+		if(count >= MAX)
+		break;
+	}
+	
+	fclose(fp);
+	return count;
+} 
   
   
