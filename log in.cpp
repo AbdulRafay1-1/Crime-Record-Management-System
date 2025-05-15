@@ -42,6 +42,34 @@ typedef struct {
 	printf("Incorrect username or password :plz Try again/n");
 	
 }
+// function (add new crime record)
+void addRecord(){
+	FILE *fp = fopen(FILENAME,"ab");     //append in binary mode
+	if(!fp) {
+		printf("Error Opening File!\n");
+		return;
+	}
+	
+	CrimeRecord cr;
+	printf("Enter Case ID:");
+	if (scanf("%d",&cr.caseID) !=1) {
+		printf("Invalid Input! Case ID Must Be a Number.\n");
+		while(getchar() !='\n');
+		fclose (fp);
+		return;
+	}
+	
+	getchar(); //clear newline
+	
+	printf("Enter Criminal name:");
+	fgets(cr.criminalName,sizeof(cr.criminalName),stdin);
+	cr.criminalName[strcspn(cr.criminalName,"\n")] = '\0';
+	
+	printf("Enter Crime Type:");
+	fgets(cr.crimeType,sizeof(cr.crimeType),stdin);
+	cr.crimeType,[strcspn(cr.crimeType,"\n")] ='\0';
+	
+}
 
 
 void deleteRecord() {
