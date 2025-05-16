@@ -1,3 +1,7 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
 #define MAX 100
 #define FILENAME "records.dat"
 
@@ -16,6 +20,51 @@ typedef struct {
   void deleteRecord();    //delete function
   int loadFromFile(CrimeRecord*);
   
+  int main(){
+
+	int choice,caseID;
+	
+	while (1){
+		printf("\n---Crime Records Management System---\n");
+		printf("1.Add crime records\n");
+		printf("2.View All Records\n");
+		printf("3.Search by case ID\n");
+		printf("4.Delete Records\n");
+		printf("5.Exit\n");
+		
+		printf("Enter your choice: ");
+		
+		if (scanf("%d",&choice) !=1){
+			printf("Invalid input! please enter a valid number.\n");
+			while (getchar() != '\n');// clear invalid input
+			continue;
+		}
+		switch (choice){
+			case 1: addRecord();
+			break;
+			case 2: viewRecord();
+			break;
+			case 3: 
+			printf("Enter case Id to search:");		
+	    	if(scanf("%d",&caseId) !=1){
+				printf("Invalid input! please enter a valid number.\n");
+				while(grtchar()!='\n');//clear buffer
+				continue;
+			}
+			searchByCaseID(caseID);
+			break;
+			case 4: deleteRecord();
+			break;
+			case 5: 
+			printf("Exiting program.Goodbye!\n");
+			exit(0);
+			default:
+				printf("Invalid choice!please try again.\n ");
+			
+		}
+		
+	}
+	return 0;
   //login function 
   int login(){
   	char username[20],password[20];
@@ -68,6 +117,33 @@ void addRecord(){
 	printf("Enter Crime Type:");
 	fgets(cr.crimeType,sizeof(cr.crimeType),stdin);
 	cr.crimeType,[strcspn(cr.crimeType,"\n")] ='\0';
+	
+}
+//function to search record by case ID
+void searchByCaseID(int id){
+	CrimeRecord cr;
+	FILE*fp =fopen(FILENAME,"rb");
+	if(!fp){
+		printf("Error opening file!\n");
+		return;
+	}
+	int found = 0;
+	while(fread(&cr,sizeof(CrimeRecord),1,fp)){
+		if(cr.caseID ==id){
+			printf("\nRecord Found:\n");
+			printf("CaseID:%d\n",cr.caseID);
+			printf("Criminal Name:%s\n",cr.criminalName);
+			printf("Crime Type:%s\n",cr.crimeType);
+			printf("Crime Location:%s\n",cr.crimeLocation);
+			printf("Date:%s\n",cr.date);
+			printf("Case Status:%s\n",cr.caseStatus);
+			found = 1;
+			break;
+		}
+	}
+	fclose(fp);
+	if(!found)
+	printf("Record With Case ID %d not found.\n",id);
 	
 }
 
