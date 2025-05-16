@@ -15,8 +15,13 @@ typedef struct {
 	char caseStatus[50] ;
 }CrimeRecord;
 
+
+// function declarations
+
   int login(); //login function new
   void addRecord();
+  void view records();
+  void searchbycasID(int);
   void deleteRecord();    //delete function
   int loadFromFile(CrimeRecord*);
   
@@ -111,14 +116,61 @@ void addRecord(){
 	getchar(); //clear newline
 	
 	printf("Enter Criminal name:");
+	
 	fgets(cr.criminalName,sizeof(cr.criminalName),stdin);
+	
 	cr.criminalName[strcspn(cr.criminalName,"\n")] = '\0';
 	
 	printf("Enter Crime Type:");
+	
 	fgets(cr.crimeType,sizeof(cr.crimeType),stdin);
+	
 	cr.crimeType,[strcspn(cr.crimeType,"\n")] ='\0';
 	
+	printf("Enter Crime Location");
+	fgets(cr.crimeLocation,sizeof(cr.crimeLocation),stdin);
+	cr.crimeLocation[strcspn(cr.crimeLocation, "\n")] = '\0';
+
+    printf("Enter Date (dd/mm/yyyy):");
+    scanf("%19s", cr.date);
+
+    getchar();        // clear buffer before reading case status
+    printf("Enter Case Status (e.g., Open, Closed, Pending):");
+    fgets(cr.caseStatus, sizeof(cr.caseStatus), stdin);
+    cr.caseStatus[strcspn(cr.caseStatus, "\n")] = '\0';
+
+    fwrite(&cr, sizeof(CrimeRecord), 1, fp);
+    fclose(fp);
+
+    printf("Record added successfully!\n");
 }
+	
+}
+// function view all crime records
+
+void viewRecords() {
+	
+	CrimeRecord records[MAX];
+	
+	int count=loadFromFile(records);
+	
+	if (count==0){
+		
+		printf("No Records Found.\n");
+		return;
+	}
+	printf("\n%- %-15s\n10s %-20s %-20s %-20s %-15s","Case ID","Criminal Name","Crime Type","Location","Date","Status",);
+	
+	printf("----------------------------------------------------------------------\n");
+	
+	for(int i = 0; i < count; i++) {
+		 
+		 	printf("%-10d %-20s %-20s %-20s %-15s %-15s\n", records[i].caseID,records[i].criminalName,records[i].crimeType,records[i].crimeLocation,records[i].date,records[i].caseStatus);
+		
+	}
+	
+}
+
 //function to search record by case ID
 void searchByCaseID(int id){
 	CrimeRecord cr;
@@ -147,7 +199,7 @@ void searchByCaseID(int id){
 	
 }
 
-
+// delete records
 void deleteRecord() {
 	int caseID;
 	printf("Enter Case ID to Delete: ");
